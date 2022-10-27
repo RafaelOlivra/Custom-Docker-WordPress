@@ -1,0 +1,53 @@
+version: '3'
+services:
+  db:
+    image: mariadb:10.6.4-focal
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - "${MYSQL_VOLUME_PATH}:/var/lib/mysql"
+    restart: always
+    env_file:
+      - "./.env"
+    expose:
+      - 3306
+      - 33060
+  wordpress:
+    image: wordpress:apache
+    depends_on:
+      - db
+    volumes:
+      - "${WORDPRESS_VOLUME_PATH}:/var/www/html"
+      - "${APACHE_LOG_PATH}:/var/log/apache2"
+      - "${CERTBOT_PATH}:/var/imported/ssl/"
+      - "./wp-extra-config.php:/var/www/html/wp-extra-config.php"
+      - "./apache-vhost-config.conf:/etc/apache2/sites-available/${DOMAIN}.conf"
+      - "./php.ini:/usr/local/etc/php/conf.d/custom.ini"
+    command: >
+      bash -c "docker-entrypoint.sh apache2-foreground & echo 'ServerName ${DOMAIN}' >> /etc/apache2/apache2.conf & echo 'Define ServerName ${DOMAIN}' >> /etc/apache2/conf-enabled/environment.conf & a2enmod http2 ssl & a2ensite ${DOMAIN}.conf & service apache2 restart & tail -f /dev/null"
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file:
+      - "./.env"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_CONFIG_EXTRA: include(__DIR__.'/wp-extra-config.php');
+  certbot:
+    depends_on:
+      - wordpress
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - "${CERTBOT_PATH}:/etc/letsencrypt"
+      - "${WORDPRESS_VOLUME_PATH}:/var/www/html"
+      - "${APACHE_LOG_PATH}:/var/log/letsencrypt"
+    command: certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email ${CERTBOT_DOMAINS_CMD}
+  redis:
+    image: redis:6.2
+    expose:
+      - 6379
+    restart: always
