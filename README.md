@@ -7,7 +7,7 @@ For smaller sites, as long as you have an optimized theme and a good caching plu
 insignificant.
 
 ## Usage
-Clone the repo, create a .env file using the provided .env.example file as example (Use strong passwords!).
+Clone the repo, create an .env file using the provided .env.example file as example (Use strong passwords!).
 Then run:
 ```
 docker-compose up
