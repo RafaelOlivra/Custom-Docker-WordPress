@@ -12,7 +12,7 @@ services:
       - 3306
       - 33060
   wordpress:
-    image: wordpress:apache
+    image: wordpress:fpm
     depends_on:
       - db
     volumes:
@@ -21,9 +21,11 @@ services:
       - "${CERTBOT_PATH}:/var/imported/ssl/"
       - "./wp-extra-config.php:/var/www/html/wp-extra-config.php"
       - "./apache-vhost-config.conf:/etc/apache2/sites-available/${DOMAIN}.conf"
+      - "./php-fpm.conf:/etc/apache2/conf-available/php-fpm.conf"
       - "./php.ini:/usr/local/etc/php/conf.d/custom.ini"
+      - "./docker-entrypoint.sh:/usr/bin/custom-docker-entrypoint.sh"
     command: >
-      bash -c "docker-entrypoint.sh apache2-foreground & echo 'ServerName ${DOMAIN}' >> /etc/apache2/apache2.conf & echo 'Define ServerName ${DOMAIN}' >> /etc/apache2/conf-enabled/environment.conf & a2enmod http2 ssl & a2ensite ${DOMAIN}.conf & service apache2 restart & tail -f /dev/null"
+      bash -c "docker-entrypoint.sh php-fpm && chmod +x /usr/bin/custom-docker-entrypoint.sh & bash custom-docker-entrypoint.sh"
     restart: always
     ports:
       - "80:80"
