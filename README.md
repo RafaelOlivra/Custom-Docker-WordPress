@@ -1,8 +1,8 @@
-# A simple Docker Image for Containarized WordPress
+# A simple Docker Image for Containerized WordPress
 
 It includes by default **Mariadb 10.6.4 / WordPress:Apache / Redis / Certbot SSL (Let's Encrypt)**.  
 I made this because, while there are more "modern" approaches to run a WordPress container with reverse proxy via "Caddy" or "NGINX",
-a lot of plugins still relies on custom .htaccess rules to work (301 Redirection Plugins, Webp Converter for Media, etc..), so is easier to just roll with what works best.
+a lot of plugins still relies on custom .htaccess rules to work (301 Redirection Plugins, Webp Converter for Media, etc..), so is easier to just roll with what works best.  
 For smaller sites, as long as you have an optimized theme and a good caching plugin, the performance difference between the apache server and the reverse proxy solutions is almost
 insignificant.
 
