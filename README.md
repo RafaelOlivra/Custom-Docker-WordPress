@@ -6,17 +6,16 @@ a lot of plugins still relies on custom .htaccess rules to work (301 Redirection
 For smaller sites, as long as you have an optimized theme and a good caching plugin, the performance difference between the apache server and the reverse proxy solutions is almost
 insignificant.
 
-# Usage
+## Usage
 Clone the repo, create a .env file using the provided .env.example file as example (Use strong passwords!).
 Then run:
 ```
 docker-compose up
 ```
 For the first time you run the container, Certbot will attempt to require and SSL certifacte for you domain and then save the cert files to disk. Because of this,
-Apache SSL will not work right away, you need to restart the container in order for apache to be able to read the cert files and enable SSL. Just run the docker-compose run
-command again, and that is it!
+Apache SSL will not work right away, you need to restart the container in order for apache to be able to read the cert files and enable SSL. Just run the docker-compose up command again, and that is it!
 
-# Enabling Redis
-To enable the Redis object cache on your WordPress installation, just install the "Redis Object Cache" plugin: [https://wordpress.org/plugins/redis-cache/].  
+## Enabling Redis
+To enable the Redis object cache on your WordPress installation, just install the **"Redis Object Cache"** plugin: https://wordpress.org/plugins/redis-cache/.  
 Then go to **Settings > Redis > Enable Object Cache**. It should work out of the box.
 
