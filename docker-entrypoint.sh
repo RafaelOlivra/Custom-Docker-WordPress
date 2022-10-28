@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Install apache
+# Install apache if needed
+if [[ ! -f /usr/sbin/apache2 ]]
+then
 apt update
 apt install -y apache2
 
@@ -16,6 +18,7 @@ a2ensite $DOMAIN.conf
 
 # Remove the default index.html file added by the initial apache install
 rm -f /var/www/html/index.html
+fi
 
 # Go live!
 service apache2 restart
