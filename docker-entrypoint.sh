@@ -24,8 +24,8 @@ fi
 if [[ ! -f /var/imported/ssl/live/$DOMAIN/fullchain.pem ]]; then
     if [ $USE_SNAKEOIL_CERT_FALLBACK == 'true' ]; then
         mkdir -p /var/imported/ssl/live/$DOMAIN/
-        ln -s /etc/ssl/certs/ssl-cert-snakeoil.pem /var/imported/ssl/live/$DOMAIN/fullchain.pem
-        ln -s /etc/ssl/private/ssl-cert-snakeoil.key /var/imported/ssl/live/$DOMAIN/privkey.pem
+        cp /etc/ssl/certs/ssl-cert-snakeoil.pem /var/imported/ssl/live/$DOMAIN/fullchain.pem
+        cp /etc/ssl/private/ssl-cert-snakeoil.key /var/imported/ssl/live/$DOMAIN/privkey.pem
     fi
 fi
 
